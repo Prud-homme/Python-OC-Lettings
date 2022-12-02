@@ -40,3 +40,4 @@ class IndexViewTestCase(TestCase):
         """
         assert "<title>Lettings</title>" in self.response.content.decode()
         assert self.letting.title in self.response.content.decode()
+        assert self.response.status_code == 200

@@ -33,3 +33,4 @@ class ProfileViewTestCase(TestCase):
         """
         assert f"<title>{self.profile.user.username}</title>" in self.response.content.decode()
         assert self.profile.favorite_city in self.response.content.decode()
+        assert self.response.status_code == 200

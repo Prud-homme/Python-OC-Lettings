@@ -21,3 +21,4 @@ class IndexViewTestCase(TestCase):
         Test the content of html response
         """
         assert "<title>Holiday Homes</title>" in self.response.content.decode()
+        assert self.response.status_code == 200

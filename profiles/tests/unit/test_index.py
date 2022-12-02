@@ -33,3 +33,4 @@ class IndexViewTestCase(TestCase):
         """
         assert "<title>Profiles</title>" in self.response.content.decode()
         assert self.profile.user.username in self.response.content.decode()
+        assert self.response.status_code == 200

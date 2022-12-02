@@ -44,3 +44,4 @@ class LettingViewTestCase(TestCase):
         assert self.letting.address.state in self.response.content.decode()
         assert str(self.letting.address.zip_code) in self.response.content.decode()
         assert self.letting.address.country_iso_code in self.response.content.decode()
+        assert self.response.status_code == 200
