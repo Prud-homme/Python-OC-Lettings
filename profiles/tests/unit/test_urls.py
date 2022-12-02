@@ -11,5 +11,5 @@ class ProfilesUrlsTestCase(TestCase):
         self.assertEqual(url, "/profiles/")
 
     def test_profile(self):
-        url = reverse("profiles:profile", args=[1])
-        self.assertEqual(url, "/profiles/1/")
+        url = reverse("profiles:profile", args=["username"])
+        self.assertEqual(url, "/profiles/username/")
