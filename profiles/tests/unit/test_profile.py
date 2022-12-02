@@ -31,5 +31,5 @@ class ProfileViewTestCase(TestCase):
         """
         Test if the title of letting previously created are in the content of html response
         """
-        assert self.profile.user.username in self.response.content.decode()
+        assert f"<title>{self.profile.user.username}</title>" in self.response.content.decode()
         assert self.profile.favorite_city in self.response.content.decode()

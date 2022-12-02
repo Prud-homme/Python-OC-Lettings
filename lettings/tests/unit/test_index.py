@@ -36,6 +36,7 @@ class IndexViewTestCase(TestCase):
 
     def test_index_template_content(self):
         """
-        Test if the title of letting previously created are in the content of html response
+        Test the content of html response
         """
-        self.assertInHTML(self.letting.title, self.response.content.decode())
+        assert "<title>Lettings</title>" in self.response.content.decode()
+        assert self.letting.title in self.response.content.decode()

@@ -36,9 +36,9 @@ class LettingViewTestCase(TestCase):
 
     def test_index_template_content(self):
         """
-        Test if the title of letting previously created are in the content of html response
+        Test the content of html response
         """
-        assert self.letting.title in self.response.content.decode()
+        assert f"<title>{self.letting.title}</title>"
         assert self.letting.address.__str__() in self.response.content.decode()
         assert self.letting.address.city in self.response.content.decode()
         assert self.letting.address.state in self.response.content.decode()

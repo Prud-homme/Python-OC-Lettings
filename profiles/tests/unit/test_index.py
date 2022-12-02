@@ -31,4 +31,5 @@ class IndexViewTestCase(TestCase):
         """
         Test if the title of letting previously created are in the content of html response
         """
-        self.assertInHTML(self.profile.user.username, self.response.content.decode())
+        assert "<title>Profiles</title>" in self.response.content.decode()
+        assert self.profile.user.username in self.response.content.decode()

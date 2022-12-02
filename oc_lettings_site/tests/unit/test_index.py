@@ -15,3 +15,9 @@ class IndexViewTestCase(TestCase):
         Test if the template are used is the correct.
         """
         self.assertTemplateUsed(self.response, "index.html")
+
+    def test_index_template_content(self):
+        """
+        Test the content of html response
+        """
+        assert "<title>Holiday Homes</title>" in self.response.content.decode()
