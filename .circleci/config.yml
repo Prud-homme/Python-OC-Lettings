@@ -64,3 +64,7 @@ workflows:
       - push-to-dockerhub:
           requires:
             - build-flake8-test
+          filters:
+            branches:
+              only:
+                - develop
