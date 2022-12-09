@@ -12,9 +12,7 @@ class ProfileViewTestCase(TestCase):
         """
         Create an user and a profile in the test database.
         """
-        self.user = User.objects.create_user(
-            username="test_user", password="?2.PabY8MB"
-        )
+        self.user = User.objects.create_user(username="test_user")
         Profile.objects.create(user=self.user, favorite_city="Paris")
         self.profile = Profile.objects.all().first()
 
