@@ -31,7 +31,6 @@ class LettingViewTestCase(TestCase):
         """
         url = reverse("lettings:letting", args=[1])
         response = self.client.get(url)
-        content = response.content.decode()
 
         assert response.status_code == 200
         self.assertTemplateUsed(response, "lettings/letting.html")

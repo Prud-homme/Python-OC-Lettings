@@ -23,9 +23,7 @@ class ProfileViewTestCase(TestCase):
         Test if the template are used is the correct.
         """
         url = reverse("profiles:profile", args=[self.user.username])
-
         response = self.client.get(url)
-        content = response.content.decode()
 
         assert response.status_code == 200
         self.assertTemplateUsed(response, "profiles/profile.html")

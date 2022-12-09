@@ -31,7 +31,6 @@ class IndexViewTestCase(TestCase):
         """
         url = reverse("lettings:index")
         response = self.client.get(url)
-        content = response.content.decode()
 
         assert response.status_code == 200
         self.assertTemplateUsed(response, "lettings/index.html")
