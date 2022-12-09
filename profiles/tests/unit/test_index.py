@@ -11,26 +11,32 @@ class IndexViewTestCase(TestCase):
     def setUp(self):
         """
         Create an user and a profile in the test database.
-        GET request to index of profiles and save response in a variable.
         """
-        username = "test_user"
-        password = "?2.PabY8MB"
-        user = User.objects.create_user(username=username, password=password)
-        Profile.objects.create(user=user, favorite_city="NY")
+        self.user = User.objects.create_user(
+            username="test_user", password="?2.PabY8MB"
+        )
+        Profile.objects.create(user=self.user, favorite_city="NY")
         self.profile = Profile.objects.all().first()
-        url = reverse("profiles:index")
-        self.response = self.client.get(url)
 
     def test_index_template_name(self):
         """
         Test if the template are used is the correct.
         """
-        self.assertTemplateUsed(self.response, "profiles/index.html")
+        url = reverse("profiles:index")
+        response = self.client.get(url)
+        content = response.content.decode()
+
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, "profiles/index.html")
 
     def test_index_template_content(self):
         """
         Test if the title of letting previously created are in the content of html response
         """
-        assert "<title>Profiles</title>" in self.response.content.decode()
-        assert self.profile.user.username in self.response.content.decode()
-        assert self.response.status_code == 200
+        url = reverse("profiles:index")
+        response = self.client.get(url)
+        content = response.content.decode()
+
+        assert response.status_code == 200
+        assert "<title>Profiles</title>" in content
+        assert self.profile.user.username in content

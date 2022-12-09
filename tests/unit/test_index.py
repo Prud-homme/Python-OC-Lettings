@@ -4,21 +4,26 @@ from django.urls import reverse
 
 class IndexViewTestCase(TestCase):
     def setUp(self):
-        """
-        GET request to main index and save response in a variable.
-        """
-        url = reverse("index")
-        self.response = self.client.get(url)
+        pass
 
     def test_index_template_name(self):
         """
         Test if the template are used is the correct.
         """
-        self.assertTemplateUsed(self.response, "index.html")
+        url = reverse("index")
+        response = self.client.get(url)
+        content = response.content.decode()
+
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, "index.html")
 
     def test_index_template_content(self):
         """
         Test the content of html response
         """
-        assert "<title>Holiday Homes</title>" in self.response.content.decode()
-        assert self.response.status_code == 200
+        url = reverse("index")
+        response = self.client.get(url)
+        content = response.content.decode()
+
+        assert response.status_code == 200
+        assert "<title>Holiday Homes</title>" in content
