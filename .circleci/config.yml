@@ -2,25 +2,102 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+orbs:
+  python: circleci/python@2.1.1
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  build-flake8-test:
+    # This job is used to launch the linting of the code and the tests
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: cimg/python:3.11.0
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
+          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run:
+          name: Run flake8
+          command: flake8
+      - run:
+          name: Run tests
+          command: pytest
+
+  build-and-test:
+    # This job is used to launch the tests
+    docker:
+      - image: cimg/python:3.11.0
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
+          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run:
+          name: Run tests
+          command: pytest
+
+
+  push-to-dockerhub:
+    # This job is used to create a docker image and push the image to a docker repository
+    docker:
+      - image: cimg/python:3.11.0
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.18
+          docker_layer_caching: true
+      - run: |
+          echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+      - run: docker build -t $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 .
+      - run: docker push $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
+
+  deploy-to-heroku:
+    # This job is used to deploy the previous docker image to Heroku
+    machine: true
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  dev:
+    # This workflow is used on all branches except main
     jobs:
-      - say-hello
+      - build-flake8-test:
+          filters:
+            branches:
+              ignore:
+                - main
+  prod:
+    # This workflow is used only on the main branch
+    jobs:
+      - build-and-test:
+          # Launch the tests
+          filters:
+            branches:
+              only:
+                - main
+      - push-to-dockerhub:
+          # If the tests are passed
+          # Create a docker image and push the image to a docker repository
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - main
+      - deploy-to-heroku:
+          # If the image has been pushed
+          # Deploy this image on Heroku
+          requires:
+            - push-to-dockerhub
+          filters:
+            branches:
+              only:
+                - main
