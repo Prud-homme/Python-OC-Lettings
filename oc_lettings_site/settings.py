@@ -1,5 +1,8 @@
 import os
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -13,7 +16,7 @@ SECRET_KEY = "fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'oc-lettings-56.herokuapp.com']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "oc-lettings-56.herokuapp.com"]
 
 
 # Application definition
@@ -68,9 +71,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "oc-lettings-site.sqlite3"),
-        'TEST': {
+        "TEST": {
             "NAME": os.path.join(BASE_DIR, "test_oc-lettings-site.sqlite3"),
-            'MIGRATE': False,
+            "MIGRATE": False,
         },
     }
 }
@@ -115,3 +118,18 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+
+sentry_sdk.init(
+    dsn="https://387c4880b4924e76b4639dcfe249182d@o4504532112900096.ingest.sentry.io/4504532135247873",  # noqa: E501
+    integrations=[
+        DjangoIntegration(),
+    ],
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+)
