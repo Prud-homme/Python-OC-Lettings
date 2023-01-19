@@ -14,4 +14,4 @@ def index(request):
 
 
 def trigger_error(request):
-    division_by_zero = 1 / 0
+    division_by_zero = 1 / 0  # noqa: F841
