@@ -64,11 +64,11 @@ jobs:
     steps:
       - checkout
       - heroku/push-docker-image:
-          api-key: $HEROKU_API_KEY
+          api-key: HEROKU_API_KEY
           app-name: $HEROKU_APP_NAME
           process-types: web
       - heroku/release-docker-image:
-          api-key: $HEROKU_API_KEY
+          api-key: HEROKU_API_KEY
           app-name: $HEROKU_APP_NAME
           process-types: web
 
