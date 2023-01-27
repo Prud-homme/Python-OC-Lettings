@@ -59,10 +59,10 @@ jobs:
   deploy-to-heroku:
     # This job is used to deploy the previous docker image to Heroku
     # check-authentication verify the API key
-    machine:
-      enabled: true
+    executor: heroku/default
     steps:
       - checkout
+      - heroku/install
       - heroku/push-docker-image
       - heroku/release-docker-image
 
