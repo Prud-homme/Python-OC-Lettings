@@ -66,10 +66,10 @@ jobs:
       - heroku/check-authentication
       - checkout
       - heroku/push-docker-image:
-          app-name: ${HEROKU_APP_NAME}
+          app-name: $HEROKU_APP_NAME
           process-types: web
       - heroku/release-docker-image:
-          app-name: ${HEROKU_APP_NAME}
+          app-name: $HEROKU_APP_NAME
           process-types: web
 
 workflows:
