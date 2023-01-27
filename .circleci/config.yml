@@ -63,8 +63,6 @@ jobs:
       - run:
           name: Build and push Docker image to Heroku
           command: |
-            heroku config:set SECRET_KEY=${SECRET_KEY}
-            heroku config:set SENTRY_DSN=${SENTRY_DSN}
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
