@@ -43,9 +43,6 @@ jobs:
     # This job is used to create a docker image and push the image to a docker repository
     docker:
       - image: cimg/python:3.11.0
-    environment:
-      SECRET_KEY: $SECRET_KEY
-      SENTRY_DSN: $SENTRY_DSN
     steps:
       - checkout
       - setup_remote_docker:
@@ -66,6 +63,8 @@ jobs:
       - run:
           name: Build and push Docker image to Heroku
           command: |
+            heroku config:set SECRET_KEY=${SECRET_KEY}
+            heroku config:set SENTRY_DSN=${SENTRY_DSN}
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
