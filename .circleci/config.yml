@@ -63,11 +63,11 @@ jobs:
     steps:
       - heroku/install
       - heroku/check-authentication
-      - heroku/checkout
-      - heroku/push-docker-image:
+      - checkout
+      - push-docker-image:
           app-name: ${HEROKU_APP_NAME}
           process-types: web
-      - heroku/release-docker-image:
+      - release-docker-image:
           app-name: ${HEROKU_APP_NAME}
           process-types: web
 
