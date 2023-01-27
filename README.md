@@ -89,6 +89,8 @@ Mon application Heroku est disponible à l'adresse `http://oc-lettings-56.heroku
   - `DOCKERHUB_PASSWORD`: mot de passe du compte DockerHub
   - `HEROKU_APP_NAME`: nom de l'application sur Heroku (oc-lettings-56 pour ce repository)
   - `HEROKU_API_KEY`: clé API de l'application sur Heroku
+  - `SECRET_KEY`: clé de l'application Django
+  - `SENTRY_DSN`: indique au SDK de Sentry où envoyer les événements
 
 #### Récapitulatif
 Chaque push sur le repository GitHub déclenche un workflow de Circle CI:
@@ -104,7 +106,7 @@ Les workflows et jobs sont configuré dans le fichier `config.yml` du dossier `.
 
 #### Création et lancement en local d'une image de l'application
 
-Il faut commencer par se placer à la racine du repertoire contenant le projet puis lancer la commande suivante : `docker build -t <IMAGE_NAME> . && docker run -d -p 8000:8000 <IMAGE_NAME>`
+Il faut commencer par se placer à la racine du repertoire contenant le projet puis lancer la commande suivante : `docker build -t <IMAGE_NAME> . && docker run -d -p 8000:8000 --env-file ./.env <IMAGE_NAME>`
 
 *`IMAGE_NAME` correspond au nom que vous souhaitez donner à l'image de l'application.*
 

@@ -4,6 +4,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.1.1
+  heroku: circleci/heroku@2.0.0
 
 jobs:
   build-flake8-test:
@@ -42,6 +43,9 @@ jobs:
     # This job is used to create a docker image and push the image to a docker repository
     docker:
       - image: cimg/python:3.11.0
+    environment:
+      SECRET_KEY: $SECRET_KEY
+      SENTRY_DSN: $SENTRY_DSN
     steps:
       - checkout
       - setup_remote_docker:
@@ -54,16 +58,17 @@ jobs:
 
   deploy-to-heroku:
     # This job is used to deploy the previous docker image to Heroku
-    machine: true
+    # check-authentication verify the API key
     steps:
+      - install
+      - check-authentication
       - checkout
-      - run:
-          name: Build and push Docker image to Heroku
-          command: |
-            sudo curl https://cli-assets.heroku.com/install.sh | sh
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
+      - push-docker-image:
+          app-name: ${HEROKU_APP_NAME}
+          process-types: web
+      - release-docker-image:
+          app-name: ${HEROKU_APP_NAME}
+          process-types: web
 
 workflows:
   dev:
