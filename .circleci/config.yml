@@ -59,16 +59,12 @@ jobs:
   deploy-to-heroku:
     # This job is used to deploy the previous docker image to Heroku
     # check-authentication verify the API key
-    machine: true
+    executor: heroku/default
     steps:
       - checkout
       - heroku/install
-      - run:
-        command: HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-      - run:
-        command: HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
-      - run:
-        command: HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
+      - heroku/push-docker-image
+      - heroku/release-docker-image
 
 workflows:
   dev:
