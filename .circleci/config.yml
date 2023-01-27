@@ -53,13 +53,14 @@ jobs:
           docker_layer_caching: true
       - run: |
           echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run: docker build -t $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 .
+      - run: docker build -t --build-arg SECRET_KEY --build-arg SENTRY_DSN $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 .
       - run: docker push $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
 
   deploy-to-heroku:
     # This job is used to deploy the previous docker image to Heroku
     # check-authentication verify the API key
-    executor: heroku/default
+    machine:
+      enabled: true
     steps:
       - heroku/install
       - heroku/check-authentication
