@@ -58,10 +58,12 @@ jobs:
 
   deploy-to-heroku:
     # This job is used to deploy the previous docker image to Heroku
-    # check-authentication verify the API key
     executor: heroku/default
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.18
+          docker_layer_caching: true
       - heroku/install
       - heroku/push-docker-image
       - heroku/release-docker-image
