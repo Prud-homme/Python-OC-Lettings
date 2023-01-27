@@ -89,6 +89,7 @@ Mon application Heroku est disponible à l'adresse `http://oc-lettings-56.heroku
   - `DOCKERHUB_PASSWORD`: mot de passe du compte DockerHub
   - `HEROKU_APP_NAME`: nom de l'application sur Heroku (oc-lettings-56 pour ce repository)
   - `HEROKU_API_KEY`: clé API de l'application sur Heroku
+- Configurer les variables d'environnements Heroku de l'application:
   - `SECRET_KEY`: clé de l'application Django
   - `SENTRY_DSN`: indique au SDK de Sentry où envoyer les événements
 - Pour une utilisation en local: créer une fichier `.env` à la racine du projet contenant SECRET_KEY et SENTRY_DSN
@@ -114,11 +115,19 @@ Les workflows et jobs sont configuré dans le fichier `config.yml` du dossier `.
 
 #### Création et lancement en local d'une image de l'application
 
-Il faut commencer par se placer à la racine du repertoire contenant le projet puis lancer la commande suivante : `docker build -t <IMAGE_NAME> . && docker run -d -p 8000:8000 --env-file ./.env <IMAGE_NAME>`
+Il faut commencer par se placer à la racine du repertoire contenant le projet puis lancer la commande suivante : `docker build -t <NEW_IMAGE_NAME> . && docker run -d -p 8000:8000 --env-file ./.env <NEW_IMAGE_NAME>`
 
-*`IMAGE_NAME` correspond au nom que vous souhaitez donner à l'image de l'application.*
+*`NEW_IMAGE_NAME` correspond au nom que vous souhaitez donner à l'image de l'application.*
 
 Il suffit ensuite d'aller à l'adresse `http://localhost:8000` pour accèder à l'application.
+
+Il faut utiliser la commande: `docker run -d -p 8000:8000 --env-file <PATH_TO_ENV_FILE> <IMAGE_NAME>` pour lancer une image déjà existante sur docker.
+
+*`PATH_TO_ENV_FILE` correspond au chemin du fichier .env qui contient SECRET_KEY et SENTRY_DSN.*
+
+*`IMAGE_NAME` correspond au nom de l'image existante sur docker. (ex: `prudhommeflo/oc_lettings:5c7225ae10efd9b9bdb4bf4b0c779f661f372ab0`)*
+
+Lien vers la documentation de Docker: [https://docs.docker.com/](https://docs.docker.com/)
 
 #### Déploiement d'une image de l'application sur Heroku
 
@@ -144,6 +153,12 @@ Il suffit ensuite d'aller à l'adresse `http://<HEROKU_APP_NAME>.herokuapp.com/`
 
 *`<IMAGE_ID>` correspond à l'id de limage docker que l'on souhaite poussée.*
 
+Lien vers la documentation d'Heroku: [https://devcenter.heroku.com/categories/reference](https://devcenter.heroku.com/categories/reference)
+
 ### Sentry
 
-...
+La navigation vers `/sentry-debug` soulève une exception non gérée, qui est propagée jusqu'à la page des problèmes dans un projet Sentry.
+
+Pour voir le Sentry de ce projet connectez vous [https://sentry.io/auth/login/](https://sentry.io/auth/login/) en tant que `gofay18522@ezgiant.com` avec le mot de passe `oc-lettings-56`.
+
+Lien vers la documentation de Sentry: [https://docs.sentry.io/](https://docs.sentry.io/)
