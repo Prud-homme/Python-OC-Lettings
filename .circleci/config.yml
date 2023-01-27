@@ -61,6 +61,7 @@ jobs:
     executor: heroku/default
     steps:
       - checkout
+      - setup_remote_docker
       - heroku/install
       - run:
           name: Build and push Docker image to Heroku
