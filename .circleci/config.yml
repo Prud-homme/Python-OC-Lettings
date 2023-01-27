@@ -53,7 +53,7 @@ jobs:
           docker_layer_caching: true
       - run: |
           echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin
-      - run: docker build -t --build-arg SECRET_KEY=$SECRET_KEY --build-arg SENTRY_DSN=$SENTRY_DSN $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 .
+      - run: docker build --build-arg SECRET_KEY=$SECRET_KEY --build-arg SENTRY_DSN=$SENTRY_DSN -t $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1 .
       - run: docker push $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
 
   deploy-to-heroku:
@@ -66,10 +66,10 @@ jobs:
       - heroku/check-authentication
       - checkout
       - heroku/push-docker-image:
-          app-name: ${HEROKU_APP_NAME}
+          app-name: $HEROKU_APP_NAME
           process-types: web
       - heroku/release-docker-image:
-          app-name: ${HEROKU_APP_NAME}
+          app-name: $HEROKU_APP_NAME
           process-types: web
 
 workflows:
