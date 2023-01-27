@@ -61,7 +61,7 @@ jobs:
     # check-authentication verify the API key
     executor: heroku/default
     steps:
-      - install
+      - heroku/install
       - check-authentication
       - checkout
       - push-docker-image:
