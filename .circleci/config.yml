@@ -62,12 +62,12 @@ jobs:
     executor: heroku/default
     steps:
       - heroku/install
-      - check-authentication
-      - checkout
-      - push-docker-image:
+      - heroku/check-authentication
+      - heroku/checkout
+      - heroku/push-docker-image:
           app-name: ${HEROKU_APP_NAME}
           process-types: web
-      - release-docker-image:
+      - heroku/release-docker-image:
           app-name: ${HEROKU_APP_NAME}
           process-types: web
 
