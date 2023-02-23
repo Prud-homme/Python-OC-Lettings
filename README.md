@@ -113,27 +113,33 @@ Chaque push sur le repository GitHub déclenche un workflow de Circle CI:
 
 Les workflows et jobs sont configuré dans le fichier `config.yml` du dossier `.circleci`.
 
-#### Création et lancement en local d'une image de l'application
+#### Utilisation de Docker en local
+
+Une fois le container lancé, il suffit ensuite d'aller à l'adresse `http://localhost:8000` pour accèder à l'application.
+
+Lien vers la documentation de Docker: [https://docs.docker.com/](https://docs.docker.com/)
+
+##### Création d'une nouvelle image non présente sur le repo distant et lancement
 
 Il faut commencer par se placer à la racine du repertoire contenant le projet puis lancer la commande suivante : `docker build -t <NEW_IMAGE_NAME> . && docker run -d -p 8000:8000 --env-file ./.env <NEW_IMAGE_NAME>`
 
 *`NEW_IMAGE_NAME` correspond au nom que vous souhaitez donner à l'image de l'application.*
 
-Il suffit ensuite d'aller à l'adresse `http://localhost:8000` pour accèder à l'application.
+##### Récupération d'une image présente sur le repo distant et lancement
 
-Il faut utiliser la commande: `docker run -d -p 8000:8000 --env-file <PATH_TO_ENV_FILE> <IMAGE_NAME>` pour lancer une image déjà existante sur docker.
+Il faut utiliser la commande: `docker run -it --rm -p 8000:8000 --env-file <PATH_TO_ENV_FILE> <DOCKERHUB_USERNAME>/<REPOSITORY>:<TAG>
+` pour lancer une image déjà existante sur docker.
 
 *`PATH_TO_ENV_FILE` correspond au chemin du fichier .env qui contient SECRET_KEY et SENTRY_DSN.*
 
-*`IMAGE_NAME` correspond au nom de l'image existante sur docker. (ex: `prudhommeflo/oc_lettings:5c7225ae10efd9b9bdb4bf4b0c779f661f372ab0`)*
+*`<DOCKERHUB_USERNAME>/<REPOSITORY>:<TAG>` - exemple: `prudhommeflo/oc_lettings:5c7225ae10efd9b9bdb4bf4b0c779f661f372ab0`*
 
-Lien vers la documentation de Docker: [https://docs.docker.com/](https://docs.docker.com/)
 
 #### Déploiement d'une image de l'application sur Heroku
 
 Les commandes suivantes seront lancées en se placant à la racine du repertoire contenant le projet.
 
-Création et push d'une nouvelle image sur Docker:
+Création et push d'une nouvelle image sur Docker: (Optionnel)
 
 - Connexion à Docker: `docker login --username <DOCKERHUB_USERNAME> --password <DOCKERHUB_PASSWORD>`
 - Création de l'image: `docker build -t <DOCKERHUB_USERNAME>/<REPOSITORY>:<TAG> .`
@@ -142,23 +148,15 @@ Création et push d'une nouvelle image sur Docker:
 Déploiement d'une image existante sur Docker:
 
 - Connexion a Heroku: `heroku container:login`
-- Push d'une image existante sur Heroku: `docker tag <IMAGE_ID> registry.heroku.com/<HEROKU_APP_NAME>/web` puis `docker push registry.heroku.com/<HEROKU_APP_NAME>/web`
+- Push d'une image existante sur Heroku: `docker tag <DOCKERHUB_USERNAME>/<REPOSITORY>:<TAG> registry.heroku.com/<HEROKU_APP_NAME>/web` puis `docker push registry.heroku.com/<HEROKU_APP_NAME>/web`
 - Déploiement de l'image: `heroku container:release -a <HEROKU_APP_NAME> web`
 
 Il suffit ensuite d'aller à l'adresse `http://<HEROKU_APP_NAME>.herokuapp.com/` pour accèder à l'application.
-
-*`<REPOSITORY>` correspond au répertoire dans lequel seront stocké les images.*
-
-*`TAG` correspond au tag de l'image qui a été générée.*
-
-*`<IMAGE_ID>` correspond à l'id de limage docker que l'on souhaite poussée.*
 
 Lien vers la documentation d'Heroku: [https://devcenter.heroku.com/categories/reference](https://devcenter.heroku.com/categories/reference)
 
 ### Sentry
 
 La navigation vers `/sentry-debug` soulève une exception non gérée, qui est propagée jusqu'à la page des problèmes dans un projet Sentry.
-
-Pour voir le Sentry de ce projet connectez vous [https://sentry.io/auth/login/](https://sentry.io/auth/login/) en tant que `gofay18522@ezgiant.com` avec le mot de passe `oc-lettings-56`.
 
 Lien vers la documentation de Sentry: [https://docs.sentry.io/](https://docs.sentry.io/)
