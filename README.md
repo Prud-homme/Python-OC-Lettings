@@ -94,12 +94,6 @@ Mon application Heroku est disponible à l'adresse `http://oc-lettings-56.heroku
   - `SENTRY_DSN`: indique au SDK de Sentry où envoyer les événements
 - Pour une utilisation en local: créer une fichier `.env` à la racine du projet contenant SECRET_KEY et SENTRY_DSN
 
-Voici la configuration de mon fichier .env:
-
-```
-SECRET_KEY=fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s
-SENTRY_DSN=https://387c4880b4924e76b4639dcfe249182d@o4504532112900096.ingest.sentry.io/4504532135247873
-```
 
 #### Récapitulatif
 Chaque push sur le repository GitHub déclenche un workflow de Circle CI:
@@ -157,6 +151,6 @@ Lien vers la documentation d'Heroku: [https://devcenter.heroku.com/categories/re
 
 ### Sentry
 
-La navigation vers `/sentry-debug` soulève une exception non gérée, qui est propagée jusqu'à la page des problèmes dans un projet Sentry.
+La navigation vers `/sentry-debug/` soulève une exception non gérée, qui est propagée jusqu'à la page des problèmes dans un projet Sentry.
 
 Lien vers la documentation de Sentry: [https://docs.sentry.io/](https://docs.sentry.io/)
